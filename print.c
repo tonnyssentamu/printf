@@ -1,8 +1,5 @@
 #include <stdio.h>
 #include <stdarg.h>
-
-int _printf(const char *format, ...);
-
 /*
  * _printf - unction that produces output according to a format
  * @*format: ...
