@@ -1,66 +1,83 @@
-#include <stdio.h>
-#include <stdarg.h>
+#include <unistd.h>
+#include <string.h>
 #include "main.h"
-/*
- * _printf - unction that produces output according to a format
- * @*format: ...
- * @...: ...
- *
- * Return: Alway 0
+#include <stdarg.h>
+
+int _printf(const char *format, ...);
+
+/**
+ * _printf - function that produces output according to a format
+ * @format: format variable string
+ * Return: c, s  or any  input
  */
 
 int _printf(const char *format, ...)
 {
+	int print = 0;
 	va_list args;
 
+	if (format == NULL)
+	{
+		return (-1);
+	}
 	va_start(args, format);
-
-	int chars_printed = 0;
 
 	while (*format)
 	{
-		if (*format == '%')
+		if (*format != '%')
+		{
+			write(1, format, 1);
+			print++;
+		}
+		else
 		{
 			format++;
-			if (*format == '\0')
+			if (*format == '%')
 			{
-				break;
-			}
-			if (*format == 'c')
-			{
-				int c = va_arg(args, int);
-
-				putchar(c);
-
-				chars_printed++;
+				write(1, format, 1);
+				print++;
 			}
 			else if (*format == 's')
 			{
 				char *str = va_arg(args, char *);
+				int strlen = 0;
 
-				if (str != NULL)
+				while (str[strlen] != '\0')
 				{
-					while (*str)
-					{
-						putchar(*str);
-						str++;
-						chars_printed++;
-					}
+					strlen++;
 				}
+				write(1, str, strlen);
+				print += strlen;
 			}
-			else if (*format == '%')
+			else if (*format == 'c')
 			{
-				putchar('%');
-				chars_printed++;
+				char notst = (char)va_arg(args, int);
+
+				write(1, &notst, 1);
+				print++;
+			}
+			else if (*format == 'd' || *format == 'i')
+			{
+				int num = va_arg(args, int);
+
+				print += print_integer(num);
+			}
+			else if (*format == 'b')
+			{
+				unsigned int num = va_arg(args, unsigned int);
+
+				print += print_binary(num);
+			}
+			else
+			{
+				format--;
+				write(1, format, 1);
+				print++;
 			}
 		}
-		else
-		{
-			putchar(*format);
-			chars_printed++;
-		}
+
 		format++;
 	}
 	va_end(args);
-	return (chars_printed);
+	return (print);
 }
