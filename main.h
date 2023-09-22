@@ -1,5 +1,6 @@
-#if ndef MAIN_H
-#define MAIN_H
+#ifndef main_h
+#define main_h
 int _printf(const char *format, ...);
-int _putchar(char c);
-#endif /*MAIN_H*/
+int print_integer(int num);
+int print_binary(unsigned int num);
+#endif
